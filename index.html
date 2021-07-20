@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Firebase Dynamic Slider</title>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+      <link rel="stylesheet" href="assets/css/Carousel_Image_Slider-1.css">
+      <link rel="stylesheet" href="assets/css/Carousel_Image_Slider.css">
+
+
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-database.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+      <ol class="carousel-indicators">
+      </ol>
+      <div class="carousel-inner">
+
+
+
+
+      </div>
+      <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+    <script>
+      // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
+      var firebaseConfig = {
+        apiKey: "AIzaSyApByKOmN0xfvkj-rZ6jAfxnIhixh-YYbU",
+        authDomain: "fir-dynamic-slider.firebaseapp.com",
+        databaseURL: "https://fir-dynamic-slider-default-rtdb.firebaseio.com/",
+        projectId: "fir-dynamic-slider",
+        storageBucket: "fir-dynamic-slider.appspot.com",
+         };
+
+
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      // get path data
+      let dataset = firebase.database().ref();
+      let user
+      // get snapshot
+      dataset.on("value", snap => {
+        // get data obj
+        user = snap.val();
+        updateRec();
+      });
+
+      function updateRec() {
+        document.querySelector('#myCarousel .carousel-inner').innerHTML = '';
+        document.querySelector('#myCarousel .carousel-indicators').innerHTML = '';
+        let count = 0;
+        let fActive = 'active';
+        for (let elm in user.Web_Banners) {
+          try {
+            document.querySelector('#myCarousel .carousel-inner').innerHTML += `
+         <div class="carousel-item ${fActive}">
+          <img class="d-block w-100" src="${user.Web_Banners[elm].Banner_Path}" alt="${user.Web_Banners[elm].Banner_Name}" style="height: auto; width: 100%;">
+            <div class="carousel-caption d-none d-md-block">
+                <h1>${user.Web_Banners[elm].Banner_Name}</h1>
+                <p></p>
+            </div>
+        </div>`;
+            document.querySelector('#myCarousel .carousel-indicators').innerHTML += `<li data-target="#myCarousel" data-slide-to="${count}" class="${fActive}"></li>`;
+
+            count++;
+            fActive='';
+          } catch (e) {
+            console.log(e);
+          }
+        }
+      }
+
+    </script>
+
+  </body>
+</html>
